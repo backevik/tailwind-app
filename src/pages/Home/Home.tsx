@@ -1,50 +1,15 @@
 import logo from './logo.svg'
 import './Home.css'
-import Cookies from 'js-cookie'
-import { StravaTokenResponse, setTokenCookies, stravaLogin } from '../../utils/stravaAuth'
-import { useSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useStravaAuth } from '../../utils/strava/useStravaAuth'
 
-
-const getAccessToken = (refreshToken: string) => {
-  return fetch("https://www.strava.com/api/v3/oauth/token?" + new URLSearchParams({
-    client_id: import.meta.env.VITE_STRAVA_CLIENT_ID,
-    client_secret: import.meta.env.VITE_STRAVA_CLIENT_SECRET,
-    refresh_token: refreshToken,
-    grant_type: "refresh_token"
-  }), {
-    method: "POST",
-  }).then((resp) => {
-    return resp.json()
-  })
-}
 
 export const Home = () => {
-  const { enqueueSnackbar } = useSnackbar();
-  const [isLoggedInToStrava, setIsLoggedInToStrava] = useState(false)
-
-  useEffect(() => {
-    const refreshToken = Cookies.get("refreshToken")
-    if(refreshToken) {
-      getAccessToken(refreshToken).then((data) => {
-        setIsLoggedInToStrava(true)
-        setTokenCookies(data as StravaTokenResponse)
-      })
-      .catch(() => {
-        // assume auth expired, log out and show error toast
-        enqueueSnackbar("You have been logged out due to being inactive. Please log in again.", { variant: "warning" })
-        setIsLoggedInToStrava(false)
-        stravaLogin()
-      })
-    } else {
-      stravaLogin()
-    }
-  }, [])
+  const { isLoggedIn} = useStravaAuth()
 
 
   return (
     <div className="App">
-      {isLoggedInToStrava ? (
+      {isLoggedIn ? (
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>Hello Vite + React!</p>

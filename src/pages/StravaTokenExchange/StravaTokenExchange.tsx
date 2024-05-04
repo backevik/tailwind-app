@@ -1,30 +1,26 @@
 import { useEffect } from "react"
 import { useSearchParams, useNavigate } from "react-router-dom"
-import { StravaTokenResponse, oauthTokenBaseUrl, setTokenCookies } from "../../utils/stravaAuth"
+import { getOauthToken, setTokenCookies } from "../../utils/strava/authUtils";
+import { useSnackbar } from "notistack";
 
 export const StravaTokenExchange = (): JSX.Element => {
   const [searchParams] = useSearchParams()
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const authCode = searchParams.get("code") ?? ""
+  const authCode = searchParams.get("code")
 
-  const getToken = () => {
-    fetch(`${oauthTokenBaseUrl}?` + new URLSearchParams({
-      client_id: import.meta.env.VITE_STRAVA_CLIENT_ID,
-        client_secret: import.meta.env.VITE_STRAVA_CLIENT_SECRET,
-        code: authCode,
-        grant_type: "authorization_code"
-    }), {
-      method: "POST",
-    }).then((resp) => {
-      return resp.json()
-    })
-    .then((data) => {
-      setTokenCookies(data as StravaTokenResponse)
+  const getToken = async () => {
+    try {
+      const data = await getOauthToken(authCode)
+      setTokenCookies(data)
+    } catch {
+      enqueueSnackbar(
+        "Error during Strava authentication, please try again.",
+        { variant: "warning" }
+      );
+    } finally {
       navigate("/")
-    })
-    .catch((err: Error) => {
-      console.error(err)
-    })
+    }
   }
 
   useEffect(() => {

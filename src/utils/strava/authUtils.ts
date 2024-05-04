@@ -35,6 +35,51 @@ export const setTokenCookies = (data: StravaTokenResponse) => {
   });
 };
 
+export const getAccessToken = async (
+  refreshToken: string
+): Promise<StravaTokenResponse> => {
+  const resp = await fetch(
+    "https://www.strava.com/api/v3/oauth/token?" +
+      new URLSearchParams({
+        client_id: import.meta.env.VITE_STRAVA_CLIENT_ID,
+        client_secret: import.meta.env.VITE_STRAVA_CLIENT_SECRET,
+        refresh_token: refreshToken,
+        grant_type: "refresh_token",
+      }),
+    {
+      method: "POST",
+    }
+  );
+  if (!resp.ok) {
+    throw new Error(`${resp.status}: ${resp.statusText}`);
+  }
+  return resp.json();
+};
+
 export const stravaLogin = () => {
   window.location.href = stravaAuthUrl;
+};
+
+export const getOauthToken = async (
+  authCode: string | null
+): Promise<StravaTokenResponse> => {
+  if (!authCode) {
+    throw new Error("authCode is undefined");
+  }
+  const resp = await fetch(
+    `${oauthTokenBaseUrl}?` +
+      new URLSearchParams({
+        client_id: import.meta.env.VITE_STRAVA_CLIENT_ID,
+        client_secret: import.meta.env.VITE_STRAVA_CLIENT_SECRET,
+        code: authCode,
+        grant_type: "authorization_code",
+      }),
+    {
+      method: "POST",
+    }
+  );
+  if (!resp.ok) {
+    throw new Error(`${resp.status}: ${resp.statusText}`);
+  }
+  return resp.json();
 };
