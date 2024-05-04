@@ -1,4 +1,4 @@
-import { setCookie } from "typescript-cookie";
+import Cookies from "js-cookie";
 
 const scope = "read";
 export const stravaAuthUrl = `http://www.strava.com/oauth/authorize?
@@ -23,12 +23,12 @@ export const setTokenCookies = (data: StravaTokenResponse) => {
   const accessTokenExpires = new Date(data.expires_at * 1000);
   const refreshTokenExpires = new Date();
   refreshTokenExpires.setDate(new Date().getDate() + 5); // keep refresh token for arbitrary five days
-  setCookie("accessToken", accessToken, {
+  Cookies.set("accessToken", accessToken, {
     expires: accessTokenExpires,
     sameSite: "Strict",
     path: "/",
   });
-  setCookie("refreshToken", refreshToken, {
+  Cookies.set("refreshToken", refreshToken, {
     expires: refreshTokenExpires,
     sameSite: "Strict",
     path: "/",

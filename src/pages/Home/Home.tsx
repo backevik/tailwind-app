@@ -1,6 +1,6 @@
 import logo from './logo.svg'
 import './Home.css'
-import { getCookie } from 'typescript-cookie'
+import Cookies from 'js-cookie'
 import { StravaTokenResponse, setTokenCookies, stravaAuthUrl } from '../../utils/stravaAuth'
 
 
@@ -30,7 +30,7 @@ export const Home = () => {
     window.location.href = stravaAuthUrl
   }
 
-  const refreshToken = getCookie("refreshToken")
+  const refreshToken = Cookies.get("refreshToken")
   if(refreshToken) {
     getAccessToken(refreshToken)
   } else {
