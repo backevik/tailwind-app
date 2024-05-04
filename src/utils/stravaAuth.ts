@@ -34,3 +34,7 @@ export const setTokenCookies = (data: StravaTokenResponse) => {
     path: "/",
   });
 };
+
+export const stravaLogin = () => {
+  window.location.href = stravaAuthUrl;
+};

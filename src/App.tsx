@@ -4,6 +4,7 @@ import {
 } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import { StravaTokenExchange } from "./pages/StravaTokenExchange/StravaTokenExchange";
+import { SnackbarProvider } from "notistack";
 
 function App() {
 
@@ -19,7 +20,9 @@ function App() {
   ])
 
   return (
-    <RouterProvider router={router} />
+    <SnackbarProvider>
+      <RouterProvider router={router} />
+    </SnackbarProvider>
   )
 }
 

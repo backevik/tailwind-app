@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "js-cookie": "^3.0.5",
+    "notistack": "^3.0.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-router-dom": "^6.23.0"
