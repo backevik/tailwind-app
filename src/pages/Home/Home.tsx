@@ -1,10 +1,10 @@
 import logo from './logo.svg'
 import './Home.css'
-import { useStravaAuth } from '../../utils/strava/useStravaAuth'
+import { useStravaAuth } from '../../utils/strava/StravaAuthProvider'
 
 
 export const Home = () => {
-  const { isLoggedIn} = useStravaAuth()
+  const { isLoggedIn } = useStravaAuth()
 
 
   return (

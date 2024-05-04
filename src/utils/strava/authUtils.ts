@@ -8,6 +8,9 @@ client_id=${import.meta.env.VITE_STRAVA_CLIENT_ID}
 &approval_prompt=force
 &scope=${scope}`;
 
+const accessTokenCookieName = "accessToken";
+const refreshTokenCookieName = "refreshToken";
+
 export const oauthTokenBaseUrl = "https://www.strava.com/oauth/token";
 
 export interface StravaTokenResponse {
@@ -16,6 +19,14 @@ export interface StravaTokenResponse {
   expires_at: number;
 }
 
+export const getAccessTokenFromCookie = () => {
+  return Cookies.get(accessTokenCookieName);
+};
+
+export const getRefreshTokenFromCookie = () => {
+  return Cookies.get(refreshTokenCookieName);
+};
+
 export const setTokenCookies = (data: StravaTokenResponse) => {
   const refreshToken = data.refresh_token;
   const accessToken = data.access_token;
@@ -23,12 +34,12 @@ export const setTokenCookies = (data: StravaTokenResponse) => {
   const accessTokenExpires = new Date(data.expires_at * 1000);
   const refreshTokenExpires = new Date();
   refreshTokenExpires.setDate(new Date().getDate() + 5); // keep refresh token for arbitrary five days
-  Cookies.set("accessToken", accessToken, {
+  Cookies.set(accessTokenCookieName, accessToken, {
     expires: accessTokenExpires,
     sameSite: "Strict",
     path: "/",
   });
-  Cookies.set("refreshToken", refreshToken, {
+  Cookies.set(refreshTokenCookieName, refreshToken, {
     expires: refreshTokenExpires,
     sameSite: "Strict",
     path: "/",

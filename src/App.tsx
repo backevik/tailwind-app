@@ -5,13 +5,14 @@ import {
 import { Home } from "./pages/Home/Home";
 import { StravaTokenExchange } from "./pages/StravaTokenExchange/StravaTokenExchange";
 import { SnackbarProvider } from "notistack";
+import { StravaAuthProvider } from "./utils/strava/StravaAuthProvider";
 
 function App() {
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
+      element: <StravaAuthProvider><Home /></StravaAuthProvider>,
     },
     {
       path: "/redirect/exchange_token",
