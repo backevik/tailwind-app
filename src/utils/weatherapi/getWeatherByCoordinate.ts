@@ -14,13 +14,14 @@ interface getWeatherByCoordinateResponse {
     wind_kph: number; // Maximum wind speed in kilometer per hour
     wind_dir: string; // Wind direction as 16 point compass. e.g.: NSW
     wind_degree: string; // Wind direction in degrees (the direction from which the wind is blowing). E.g. 90 deg = wind is coming from the east.
+    uv: number; // UV Index
   };
   location: {
     name: string;
   };
 }
 
-export const getWeatherByCoordinate = async ({
+export const getRealtimeWeatherByCoordinate = async ({
   lat,
   lng,
 }: Coordinate): Promise<getWeatherByCoordinateResponse> => {
