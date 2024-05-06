@@ -21,6 +21,7 @@ interface getWeatherByCoordinateResponse {
   };
 }
 
+// getRealtimeWeatherByCoordinate will return the current weather for a given coordinate.
 export const getRealtimeWeatherByCoordinate = async ({
   lat,
   lng,
