@@ -1,6 +1,6 @@
-const baseUrl = "http://api.weatherapi.com/v1";
+// API docs: https://www.weatherapi.com/docs/
 
-// ?lat={lat}&lon={lon}&exclude={part}&appid={API key}
+const baseUrl = "http://api.weatherapi.com/v1";
 
 interface Coordinate {
   lat: number;
