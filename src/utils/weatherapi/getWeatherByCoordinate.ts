@@ -29,9 +29,7 @@ export const getRealtimeWeatherByCoordinate = async ({
     `${baseUrl}/current.json?` +
       new URLSearchParams({
         q: `${lat},${lng}`,
-        alerts: "yes", // weather alerts
         aqi: "no", // air quality
-        tides: "no", // tides
         key: import.meta.env.VITE_WEATHER_API_KEY,
       })
   );
