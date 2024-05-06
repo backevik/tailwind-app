@@ -10,6 +10,7 @@ client_id=${import.meta.env.VITE_STRAVA_CLIENT_ID}
 
 const accessTokenCookieName = "accessToken";
 const refreshTokenCookieName = "refreshToken";
+const athleteIdCookieName = "stravaAthleteId";
 
 export const oauthTokenBaseUrl = "https://www.strava.com/oauth/token";
 
@@ -27,7 +28,13 @@ export const getRefreshTokenFromCookie = () => {
   return Cookies.get(refreshTokenCookieName);
 };
 
-export const setTokenCookies = (data: StravaTokenResponse) => {
+export const getStravaAthleteIdFromCookie = () => {
+  return Cookies.get(athleteIdCookieName);
+};
+
+export const setTokenCookies = (
+  data: StravaTokenResponse | StravaOauthTokenResponse
+) => {
   const refreshToken = data.refresh_token;
   const accessToken = data.access_token;
   // expires_at is in seconds since epoch, convert to ms
@@ -44,6 +51,12 @@ export const setTokenCookies = (data: StravaTokenResponse) => {
     sameSite: "Strict",
     path: "/",
   });
+  if ("athlete" in data) {
+    Cookies.set(athleteIdCookieName, data.athlete.id, {
+      sameSite: "Strict",
+      path: "/",
+    });
+  }
 };
 
 export const getAccessToken = async (
@@ -71,9 +84,18 @@ export const stravaLogin = () => {
   window.location.href = stravaAuthUrl;
 };
 
+export interface StravaOauthTokenResponse {
+  refresh_token: string;
+  access_token: string;
+  expires_at: number;
+  athlete: {
+    id: string;
+  };
+}
+
 export const getOauthToken = async (
   authCode: string | null
-): Promise<StravaTokenResponse> => {
+): Promise<StravaOauthTokenResponse> => {
   if (!authCode) {
     throw new Error("authCode is undefined");
   }

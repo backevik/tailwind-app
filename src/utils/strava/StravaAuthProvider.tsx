@@ -1,10 +1,11 @@
 import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getAccessToken, getAccessTokenFromCookie, getRefreshTokenFromCookie, setTokenCookies, stravaLogin } from "./authUtils";
+import { getAccessToken, getAccessTokenFromCookie, getRefreshTokenFromCookie, getStravaAthleteIdFromCookie, setTokenCookies, stravaLogin } from "./authUtils";
 import { useSnackbar } from "notistack";
 
 
 interface StravaAuthProvider {
   isLoggedIn: boolean
+  athleteId?: string
   authToken?: string
 }
 
@@ -20,6 +21,7 @@ export const StravaAuthProvider = ({children}: StravaAuthProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const { enqueueSnackbar } = useSnackbar();
   const authToken = getAccessTokenFromCookie()
+  const athleteId = getStravaAthleteIdFromCookie()
 
   const login = async () => {
     const refreshToken = getRefreshTokenFromCookie()
@@ -48,7 +50,8 @@ export const StravaAuthProvider = ({children}: StravaAuthProviderProps) => {
   const value: StravaAuthProvider = useMemo(() => ({
     isLoggedIn,
     authToken,
-  }), [isLoggedIn, authToken])
+    athleteId,
+  }), [isLoggedIn, authToken, athleteId])
 
   return (
     <StravaAuthContext.Provider value={value}>
